@@ -26,7 +26,7 @@ export class LoginComponent {
       localStorage.setItem('token', res.token);
 
       // 🔥 Redirect to portal
-      this.router.navigate(['/home']);
+      this.router.navigate(['/portal/home']);
     },
     error: () => {
       this.error = 'Invalid credentials';
