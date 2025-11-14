@@ -1,0 +1,28 @@
+.sidebar-menu li {
+  list-style: none;
+  margin-bottom: 10px;
+}
+
+.sidebar-menu li a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-size: 1.05rem;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.sidebar-menu li a:hover {
+  background: rgba(255,255,255,0.25);
+}
+
+.sidebar-menu li a.active {
+  background: white !important;
+  color: #0d6efd !important;
+  font-weight: 700;
+}

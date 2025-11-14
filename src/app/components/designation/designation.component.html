@@ -1,0 +1,125 @@
+<div class="container mt-4">
+  <h2 class="text-center mb-4">Designation Management</h2>
+
+  <!-- 🔍 Search -->
+  <div class="input-group mb-3">
+    <input
+      type="text"
+      [(ngModel)]="searchTerm"
+      placeholder="Enter designation name"
+      class="form-control"
+    />
+    <button class="btn btn-primary" (click)="searchDesignation()">Search</button>
+    <button class="btn btn-secondary" (click)="clearSearch()">Clear</button>
+  </div>
+
+  <!-- 🧾 Form -->
+  <form [formGroup]="desigForm" (ngSubmit)="onSubmit()" class="card p-3 shadow-sm mb-4">
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Designation Name</label>
+        <input
+          formControlName="desigName"
+          class="form-control"
+          placeholder="Enter designation name"
+        />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Salary (₹)</label>
+        <input
+          formControlName="salary"
+          type="number"
+          class="form-control"
+          placeholder="Enter salary"
+        />
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-start mb-3">
+      <button
+        type="submit"
+        class="btn btn-success me-2"
+        [disabled]="desigForm.invalid"
+      >
+        {{ editMode ? 'Update' : 'Add' }}
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="resetForm()">Reset</button>
+    </div>
+  </form>
+
+  <!-- 📋 Table -->
+  <div class="table-responsive shadow-sm">
+    <table class="table table-bordered table-striped mb-0">
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th>
+          <th (click)="sortByName()" style="cursor:pointer">
+            Designation Name
+            <span *ngIf="sortAsc">🔼</span>
+            <span *ngIf="!sortAsc">🔽</span>
+          </th>
+          <th>Salary (₹)</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let des of paginatedDesignations">
+          <td>{{ des.desigid }}</td>
+          <td>{{ des.desigName }}</td>
+          <td>{{ des.salary | currency:'INR':'symbol':'1.0-0' }}</td>
+          <td>
+           <button class="btn btn-primary btn-sm me-2" (click)="editDesignation(des)">
+  <i class="bi bi-pencil-square"></i> Edit
+</button>
+<button class="btn btn-danger btn-sm" (click)="deleteDesignation(des.desigid)">
+  <i class="bi bi-trash"></i> Delete
+</button>
+
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 🧾 No Data -->
+  <div *ngIf="filteredDesignations.length === 0" class="alert alert-warning mt-3">
+    No designations to display.
+  </div>
+
+  <!-- 📄 Pagination -->
+  <div
+    *ngIf="filteredDesignations.length > 0"
+    class="d-flex justify-content-center align-items-center mt-4 mb-3 flex-wrap gap-2"
+  >
+    <div class="btn-group">
+      <!-- Prev -->
+      <button
+        class="btn btn-outline-secondary"
+        (click)="changePage(currentPage - 1)"
+        [disabled]="currentPage === 1"
+      >
+        Prev
+      </button>
+
+      <!-- Page Numbers -->
+      <button
+        *ngFor="let page of pageNumbers"
+        class="btn"
+        [class.btn-primary]="currentPage === page"
+        [class.btn-outline-primary]="currentPage !== page"
+        (click)="changePage(page)"
+      >
+        {{ page }}
+      </button>
+
+      <!-- Next -->
+      <button
+        class="btn btn-outline-secondary"
+        (click)="changePage(currentPage + 1)"
+        [disabled]="currentPage === totalPages"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+</div>

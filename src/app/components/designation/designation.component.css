@@ -1,0 +1,33 @@
+.department-container {
+  width: 80%;
+  margin: 20px auto;
+  font-family: Arial, sans-serif;
+}
+
+h2, h3 {
+  color: #003366;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 8px;
+}
+
+button {
+  padding: 5px 10px;
+  margin-right: 5px;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  color: white;
+}
+
+button:hover {
+  background-color: #0056b3;
+}

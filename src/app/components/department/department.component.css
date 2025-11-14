@@ -1,0 +1,123 @@
+/* Page title */
+h2 {
+  color: #0d6efd;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+/* Card Wrapper for Form + Table */
+.department-card {
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  margin-bottom: 30px;
+}
+
+/* Search Bar */
+.search-box input {
+  height: 45px;
+  border-radius: 10px;
+  padding-left: 12px;
+  border: 1px solid #ced4da;
+  width: 240px;
+}
+
+.search-box button {
+  height: 45px;
+  margin-left: 10px;
+  border-radius: 10px;
+}
+
+/* Department Form */
+.department-form input {
+  height: 45px;
+  border-radius: 10px;
+  padding-left: 12px;
+  border: 1px solid #ced4da;
+  width: 300px;
+}
+
+.department-form button {
+  height: 45px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+/* Table Styling */
+.table {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  font-size: 15px;
+}
+
+.table thead {
+  background: linear-gradient(90deg, #0d6efd, #4da3ff);
+  color: white;
+  font-weight: 600;
+}
+
+.table tbody tr:hover {
+  background: #eef5ff;
+  cursor: pointer;
+}
+
+/* Action Buttons */
+.btn-edit {
+  background: #0d6efd;
+  color: white;
+  padding: 5px 12px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+}
+
+.btn-edit:hover {
+  background: #0056d2;
+}
+
+.btn-delete {
+  background: #dc3545;
+  color: white;
+  padding: 5px 12px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+}
+
+.btn-delete:hover {
+  background: #b02a37;
+}
+
+/* Pagination */
+.pagination-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination-wrapper button {
+  min-width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  margin: 0 5px;
+  font-weight: 600;
+}
+
+.pagination-wrapper .active-page {
+  background: #0d6efd !important;
+  color: white !important;
+  border-color: #0d6efd;
+}
+
+/* No data alert */
+.no-data {
+  text-align: center;
+  padding: 15px;
+  background: #ffeeba;
+  border-radius: 10px;
+  font-weight: 600;
+  color: #856404;
+  margin-top: 15px;
+}

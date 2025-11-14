@@ -1,0 +1,64 @@
+/* Fullscreen background */
+.login-wrapper {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(120deg, #0d6efd, #58a8ff);
+}
+
+/* Card */
+.login-card {
+  width: 360px;
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* Group rows */
+.input-row {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+/* Label */
+.login-label {
+  font-weight: 600;
+  color: #0d6efd;
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+/* SMALL Textboxes */
+.login-input-small {
+  width: 250px;        /* 👈 reduce width here */
+  height: 42px;
+  border-radius: 10px;
+  padding-left: 12px;
+  font-size: 14px;
+  border: 1px solid #ced4da;
+}
+
+/* Password row with icon */
+.password-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;           /* space between textbox & icon */
+}
+
+/* Eye icon beside textbox */
+#passwordIcon {
+  font-size: 20px;
+  color: #6c757d;
+  cursor: pointer;
+}
+
+/* Login button */
+.login-btn {
+  height: 45px;
+  border-radius: 10px;
+  font-size: 17px;
+  font-weight: 600;
+}

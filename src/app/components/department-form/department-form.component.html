@@ -1,0 +1,17 @@
+<form [formGroup]="depForm" (ngSubmit)="submitForm()">
+
+  <label>Department Name</label>
+  <input type="text"
+         formControlName="Depname"
+         class="form-control"
+         placeholder="Enter department name">
+
+  <button type="submit" class="btn btn-primary">
+    {{ editMode ? "Update" : "Add" }}
+  </button>
+
+  <button type="button" class="btn btn-secondary" (click)="resetForm()">
+    Clear
+  </button>
+
+</form>
