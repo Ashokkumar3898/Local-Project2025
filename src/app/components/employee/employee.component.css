@@ -31,3 +31,40 @@ button {
 button:hover {
   background-color: #0056b3;
 }
+
+.spacer
+{
+  flex: 1 1 auto;
+}
+
+/* FORCE SMALLER DATEPICKER FIELD */
+.small-datepicker .mat-mdc-text-field-wrapper {
+  padding: 0 !important;
+  height: 36px !important;            /* 🔥 smaller height */
+}
+
+.small-datepicker .mat-mdc-form-field-infix {
+  padding: 0 8px !important;          /* 🔥 smaller padding */
+  min-height: 36px !important;        /* match height */
+  display: flex;
+  align-items: center;
+}
+
+.small-datepicker .mdc-text-field__input {
+  padding: 0 !important;
+  font-size: 13px !important;         /* 🔥 smaller text */
+}
+
+.small-datepicker .mdc-floating-label {
+  font-size: 12px !important;
+  top: 14px !important;
+}
+
+.small-datepicker .mat-mdc-icon-button {
+  width: 32px !important;             /* smaller calendar icon */
+  height: 32px !important;
+}
+
+.small-datepicker .mat-mdc-form-field-subscript-wrapper {
+  display: none !important;           /* remove error spacing */
+}

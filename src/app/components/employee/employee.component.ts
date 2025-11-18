@@ -1,21 +1,40 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule, JsonPipe } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormsModule, FormControl } from '@angular/forms';
 import { ApiService } from '../../services/api/api.service';
 import { Employee } from '../../models/employee/employee.component';
 import { Department } from '../../models/department/department.component';
 import { Designation } from '../../models/designation/designation.component';
 import { EmployeeRequestDTO } from '../../models/employee-request/employee-request.dto';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSelectModule } from '@angular/material/select';
 
 
 @Component({
   selector: 'app-employee',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, MatSnackBarModule, MatToolbarModule, MatIconModule, MatDialogModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatDatepickerModule, MatNativeDateModule, MatTabsModule, MatExpansionModule, MatRadioModule, MatSelectModule],
   templateUrl: './employee.component.html',
   styleUrls: ['./employee.component.css']
 })
 export class EmployeeComponent implements OnInit {
+
+  // dialog references
+  @ViewChild('addDialog') addDialog: any;
+  @ViewChild('editDialog') editDialog!: any;
+  @ViewChild('deleteDialog') deleteDialog: any;
+
   employees: Employee[] = [];
   filteredEmployees: Employee[] = [];
   paginatedEmployees: Employee[] = [];
@@ -32,18 +51,25 @@ export class EmployeeComponent implements OnInit {
 
   selectedEmployeeId: number | null = null;
 
-  constructor(private fb: FormBuilder, private api: ApiService) {
+  constructor(private fb: FormBuilder, private api: ApiService, private snackbar:MatSnackBar, private dialog: MatDialog) {
     this.empForm = this.fb.group({
       eName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       dob: ['', Validators.required],
-      age: [{ value: '', disabled: true }],
+      age: new FormControl({value:'', disabled: true}),
       hireDate: ['', Validators.required],
-      experience: [{ value: '', disabled: true }],
+      experience: new FormControl({value:'', disabled: true}),
       gender: ['', Validators.required],
       depName: ['', Validators.required],
       desigName: ['', Validators.required],
     });
+  }
+
+
+  // reusable snackbar function
+  showSnackbar(message:string)
+  {
+    this.snackbar.open(message,'close',{duration:3000, horizontalPosition: 'right', verticalPosition:'top'});
   }
 
   ngOnInit(): void {
@@ -72,94 +98,144 @@ export class EmployeeComponent implements OnInit {
     this.api.getDesignations().subscribe((res) => (this.designations = res));
   }
 
-  // Add or Update
-  onSubmit() {
-    if (this.empForm.invalid) return;
 
-    const formValue = this.empForm.getRawValue();
+   // ===================================================
+  //                 ADD DIALOG LOGIC
+  // ===================================================
 
-    const payload:EmployeeRequestDTO = {
-      eName: formValue.eName,
-      email: formValue.email,
-      dob: formValue.dob,
-      hireDate: formValue.hireDate,
-      gender: formValue.gender,
-      depName: formValue.depName,
-      desigName: formValue.desigName
-    };
-
-    if (this.editMode && this.selectedEmployeeId!= null) {
-      this.api.updateEmployee(this.selectedEmployeeId, payload).subscribe({
-        next:() => 
-        {
-        alert('Employee updated!');
-        this.resetForm();
-        this.getEmployees();
-        },
-        error: (err) => {
-          console.log("employee validation error:", JSON.stringify(err.error, null, 2));
-        }
-      });
-    } 
-    
-    else {
-      this.api.createEmployee(payload).subscribe({
-        next:() => 
-        {
-        alert('Employee added!');
-        this.resetForm();
-        this.getEmployees();
-        },
-       error:(err) => {
-        console.log("employee validation error:", JSON.stringify(err.error,null,2));
-       }
+  openAddDialog() {
+    this.empForm.reset();
+    this.editMode = false;
+    this.selectedEmployeeId = null;
+    this.empForm.patchValue({age:'', experience:''});
+    this.dialog.open(this.addDialog, {
+      width: '450px'
     });
-    }
   }
 
-  edit(emp: Employee) {
-    this.editMode = true;
-    this.empForm.patchValue(emp);
+  saveFromDialog() {
+    const payload: EmployeeRequestDTO = this.empForm.getRawValue();
 
-     this.empForm.patchValue({
+    this.api.createEmployee(payload).subscribe({
+      next: () => {
+        this.showSnackbar("Employee added successfully");
+        this.dialog.closeAll();
+        this.getEmployees();
+      },
+          error: (err) => {
+      console.log("SERVER VALIDATION ERRORS (ADD):", err.error.errors);
+  }
+});
+  }
+
+  // ===================================================
+  //                 EDIT DIALOG LOGIC
+  // ===================================================
+
+  openEditDialog(emp: Employee) {
+    this.editMode = true;
+    this.selectedEmployeeId = emp.eId;
+
+    this.empForm.patchValue({
       eName: emp.eName,
       email: emp.email,
       dob: emp.dob,
+      age: emp.age,
       hireDate: emp.hireDate,
+      experience: emp.experience,
       gender: emp.gender,
       depName: emp.departmentName,
       desigName: emp.designationName
+    });
+
+    this.dialog.open(this.editDialog, {
+      width: '450px',
+      data: { id: emp.eId }
+    });
+  }
+
+  updateFromDialog(id: number) {
+    const payload: EmployeeRequestDTO = this.empForm.getRawValue();
+
+    this.api.updateEmployee(id, payload).subscribe({
+      next: () => {
+        this.showSnackbar("Employee updated successfully");
+        this.dialog.closeAll();
+        this.getEmployees();
+      },
+      error: (err) => {
+      console.log("SERVER VALIDATION ERRORS (UPDATE):", err.error.errors);
+    }
+    });
+  }
+
+  // ===================================================
+  //              DELETE DIALOG LOGIC
+  // ===================================================
+
+  openDeleteDialog(id: number) {
+    const dialogRef = this.dialog.open(this.deleteDialog, {
+      width: '350px',
+      data: { id }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+
+    console.log("Dialog closed value (SHOULD BE ID):", result); // TEST 1
+
+    if (result) {
+
+      console.log("Sending DELETE request to API with ID:", result); // TEST 2
+
+      this.api.deleteEmployee(result).subscribe({
+        next: (res) => {
+          console.log("API DELETE RESPONSE:", res); // TEST 3
+          this.showSnackbar("Employee deleted!");
+          this.getEmployees();
+        },
+        error: (err) => {
+          console.error("DELETE ERROR:", err);       // TEST 4
+        }
+      });
+    }
   });
 }
-
-  delete(id: number) {
-    if (confirm('Delete this employee?')) {
-      this.api.deleteEmployee(id).subscribe(() => this.getEmployees());
-    }
-  }
 
   resetForm() {
     this.empForm.reset();
     this.editMode = false;
+    this.selectedEmployeeId = null;
   }
 
   // Age & Experience
-  calculateAge() {
-    const dob = new Date(this.empForm.value.dob);
+ calculateAge() {
+    const dob = this.empForm.get('dob')?.value;
+
+    //// FIXED: prevent NaN
+    if (!dob) return;
+
+    const date = new Date(dob);
+    if (isNaN(date.getTime())) return; //// FIXED
+
     const today = new Date();
-    if (dob) {
-      const age = today.getFullYear() - dob.getFullYear();
-      this.empForm.patchValue({ age });
-    }
+    const age = today.getFullYear() - date.getFullYear();
+
+    this.empForm.patchValue({ age });
   }
 
   calculateExperience() {
-    const hire = new Date(this.empForm.value.hireDate);
+    const hire = this.empForm.get('hireDate')?.value;
+
+    //// FIXED
+    if (!hire) return;
+
+    const date = new Date(hire);
+    if (isNaN(date.getTime())) return; //// FIXED
+
     const today = new Date();
-    if (hire) {
-      const experience = today.getFullYear() - hire.getFullYear();
-      this.empForm.patchValue({ experience });
-    }
+    const experience = today.getFullYear() - date.getFullYear();
+
+    this.empForm.patchValue({ experience });
   }
 
   // Sorting
