@@ -1,17 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { CompanyPortalComponent } from './company-portal.component';
 
-describe('CompanyPortal', () => {
-  let component: CompanyPortalComponent;
-  let fixture: ComponentFixture<CompanyPortalComponent>;
+import { SharedService } from './shared.service';
+
+describe('SharedService', () => {
+  let component: SharedService;
+  let fixture: ComponentFixture<SharedService>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CompanyPortalComponent]
+      imports: [SharedService]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(CompanyPortalComponent);
+    fixture = TestBed.createComponent(SharedService);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
